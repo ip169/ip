@@ -485,22 +485,77 @@
             display: flex;
         }
 
+        /* Fixed Top Navigation Bar */
+        .top-nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 10px 0;
+            display: none;
+        }
+
+        .top-nav-bar.show {
+            display: block;
+        }
+
+        .top-nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .top-nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .top-nav-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .top-nav-content {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .top-nav-link {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+        }
+
         /* Floating Navigation */
         .floating-nav {
             position: fixed;
             top: 50%;
-            right: 20px;
+            right: 10px;
             transform: translateY(-50%);
-            background: white;
-            border-radius: 15px;
-            padding: 15px 10px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 10px 8px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
             z-index: 999;
             transition: all 0.3s ease;
         }
 
         .floating-nav:hover {
-            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-50%) translateX(-3px);
         }
 
         .floating-nav-item {
@@ -508,31 +563,39 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 12px 15px;
-            margin: 5px 0;
+            padding: 8px 12px;
+            margin: 3px 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            min-width: 70px;
+            min-width: 50px;
         }
 
         .floating-nav-item:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateX(-3px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
         }
 
         .floating-nav-item i {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
+            font-size: 1.2rem;
+            margin-bottom: 2px;
         }
 
         .floating-nav-item span {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             text-align: center;
             font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Mobile responsive for floating nav */
+        @media (max-width: 768px) {
+            .floating-nav {
+                display: none;
+            }
         }
 
         .tutorial-image-caption {
@@ -1340,6 +1403,17 @@
     <!-- Back to Top Button -->
     <a href="#" class="back-to-top" id="backToTop" title="返回顶部">↑</a>
 
+    <!-- Fixed Top Navigation Bar -->
+    <div class="top-nav-bar" id="topNavBar">
+        <div class="top-nav-content">
+            <a href="#header" class="top-nav-link">🏠 首页</a>
+            <a href="#platforms-list" class="top-nav-link">📋 平台导航</a>
+            <a href="#category-guide" class="top-nav-link">💡 业务建议</a>
+            <a href="#tutorials" class="top-nav-link">📚 教程中心</a>
+            <a href="#summary" class="top-nav-link">📊 整体总结</a>
+        </div>
+    </div>
+
     <!-- Floating Navigation -->
     <div class="floating-nav">
         <a href="#header" class="floating-nav-item">
@@ -1367,13 +1441,16 @@
     <script>
         // Back to top button functionality
         const backToTop = document.getElementById('backToTop');
+        const topNavBar = document.getElementById('topNavBar');
         
         // Show/hide button on scroll
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
                 backToTop.classList.add('show');
+                topNavBar.classList.add('show');
             } else {
                 backToTop.classList.remove('show');
+                topNavBar.classList.remove('show');
             }
         });
         
@@ -1403,6 +1480,21 @@
         // Floating navigation smooth scroll
         document.querySelectorAll('.floating-nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Top navigation bar smooth scroll
+        document.querySelectorAll('.top-nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
                 const targetElement = document.getElementById(targetId);
